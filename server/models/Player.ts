@@ -40,7 +40,24 @@ const PlayerSchema = new Schema({
             type: Number,
             default:0,
         },
-
+    },
+    wins: {
+        first: {
+            type: Number,
+            default:0,
+        },
+        second: {
+            type: Number,
+            default: 0
+        },
+        third: {
+            type: Number,
+            default: 0
+        },
+        top10: {
+            type:Number,
+            default: 0
+        }
     }
 })
 

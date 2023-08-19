@@ -17,3 +17,5 @@ day 1 1pt
 
 Bonus Features - 
 Login and auto see your rankings or a profile page with your rankings across the 8 leagues
+
+show wins, top 3, top 10, etc.

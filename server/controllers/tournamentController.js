@@ -13,7 +13,7 @@ const getTournament = async () => {
     if (data.created_by == "sps.tournaments") {
         
         const playerName = data.players[0].player
-        const points = data.players[0].finish 
+        const points = calculate_points(data.players[0].finish)
         const createdPlayer = await PlayerController.createPlayer(playerName, {
                 bronzeModern: 0,
                 bronzeWild: 0, 
@@ -32,6 +32,21 @@ const getTournament = async () => {
     return null;
   }
 };
+
+const calculate_points = finish => {
+  const ranges = [
+    {range: [1], points: 15},
+    { range: [2, 3], points: 12 },
+    { range: [4, 8], points: 8 },
+    { range: [9, 16], points: 5 },
+    { range: [17, 32], points: 3 },
+    { range: [33, 64], points: 2 },
+    { range: [65, 128], points: 1 }
+  ]
+
+  const match = ranges.find(({ range }) => range.includes(finish));
+  return match ? match.points : 0;
+}
 
 module.exports = {
     getTournament,

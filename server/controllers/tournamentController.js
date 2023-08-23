@@ -12,8 +12,9 @@ const createTournamentEntry = async (name, start_date) => {
   }
 }
 
+// /tournaments/all
 const getAllTournamentEntries = async (req, res) => {
-  const tournaments = await Tournament.find({}).sort({start_date:1});
+  const tournaments = await Tournament.find({}).sort({start_date:-1});
   res.status(200).json(tournaments);
 }
 
@@ -105,13 +106,14 @@ const getAllTournaments = async () => {
       if(tournamentEntry) {
         console.log('tournament already exists', element.name, element.start_date)
       } else{
-        console.log('tournament not in our db', element.name, element.start_date)
+      createTournamentEntry(element.name, element.start_date)
+        
       }
     }
  
   });
-  
-  // createTournamentEntry(data[3].name, data[3].start_date)
+  return data
+
 }
 
 const deleteTournament = async (req, res) => {
@@ -130,6 +132,15 @@ const deleteTournament = async (req, res) => {
   res.status(200).json(tournament);
 }
 
+const deleteAllTournaments = async (req,res ) => {
+  try {
+    const result = await Tournament.deleteMany({});
+    res.status(200).json(result);
+  } catch(error) {
+    res.status(500).json({err: error.message})
+  }
+}
+
 
 
 module.exports = {
@@ -137,4 +148,5 @@ module.exports = {
     getAllTournaments,
     getAllTournamentEntries,
     deleteTournament,
+    deleteAllTournaments
 };

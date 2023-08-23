@@ -1,4 +1,6 @@
 const PlayerController = require('./playerController.js');
+const { calculate_points } = require('../calculations/score_calculations');
+
 
 const getTournament = async () => {
   try {
@@ -23,6 +25,12 @@ const getTournament = async () => {
                 goldWild: 0,
                 diamondModern: 0,
                 diamondWild: 0,
+        },
+        {
+          first: data.players[0].finish === 1 ? 1 : 0,
+          second: data.players[0].finish === 2 ? 1 : 0,
+          third: data.players[0].finish === 3 ? 1 : 0,
+          top10: data.players[0].finish >= 4 && data.players[0].finish <= 10 ? 1 : 0,
         });
     }
     return data;
@@ -33,20 +41,7 @@ const getTournament = async () => {
   }
 };
 
-const calculate_points = finish => {
-  const ranges = [
-    {range: [1], points: 15},
-    { range: [2, 3], points: 12 },
-    { range: [4, 8], points: 8 },
-    { range: [9, 16], points: 5 },
-    { range: [17, 32], points: 3 },
-    { range: [33, 64], points: 2 },
-    { range: [65, 128], points: 1 }
-  ]
 
-  const match = ranges.find(({ range }) => range.includes(finish));
-  return match ? match.points : 0;
-}
 
 module.exports = {
     getTournament,

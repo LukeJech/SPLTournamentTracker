@@ -41,7 +41,7 @@ const PlayerSchema = new Schema({
             default:0,
         },
     },
-    wins: {
+    placements: {
         first: {
             type: Number,
             default:0,

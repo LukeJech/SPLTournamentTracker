@@ -26,12 +26,12 @@ const getPlayer = async (req, res) => {
 }
 
 // create a new player
-const createPlayer = async (name, points) => {
+const createPlayer = async (name, points, placements) => {
 
     // add doc to db
-    console.log(name, points)
+    console.log(name, points, placements)
     try{
-        const player = await Player.create({name, points});
+        const player = await Player.create({name, points, placements});
         return player;
     } catch(err) {
         throw new Error(err.message)

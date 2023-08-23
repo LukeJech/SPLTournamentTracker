@@ -1,5 +1,30 @@
 const PlayerController = require('./playerController.js');
+const Tournament = require('../models/Tournament.js');
+const mongoose = require('mongoose');
 const { calculate_points } = require('../calculations/score_calculations');
+
+const createTournamentEntry = async (name, start_date) => {
+  try {
+    const tournament = await Tournament.create({name, start_date});
+    return tournament
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+const getAllTournamentEntries = async (req, res) => {
+  const tournaments = await Tournament.find({}).sort({start_date:1});
+  res.status(200).json(tournaments);
+}
+
+const getTournamentByStartDate = async (start_date) => {
+  try {
+    const tournament = await Tournament.findOne({ start_date })
+    return tournament
+  } catch{
+    throw new Error(error.message)
+  }
+}
 
 
 const getTournament = async () => {
@@ -14,7 +39,6 @@ const getTournament = async () => {
     
 
     const data = await response.json();
-    if (data.created_by == "sps.tournaments") {
 
       const playerName = data.players[0].player
           const points = calculate_points(data.players[0].finish)
@@ -61,7 +85,7 @@ const getTournament = async () => {
         console.error('Error creating/updating player:', error);
         return null;}
 
-    }
+
     return data;
 
   } catch (error) {
@@ -70,8 +94,47 @@ const getTournament = async () => {
   }
 };
 
+const getAllTournaments = async () => {
+  const response = await fetch ('https://api.splinterlands.com/tournaments/completed?username=luke-wtp')
+  const data = await response.json();
+  data.forEach(async (element) => {
+    
+
+    if(element.created_by == 'sps.tournaments') {
+      const tournamentEntry = await getTournamentByStartDate(element.start_date) 
+      if(tournamentEntry) {
+        console.log('tournament already exists', element.name, element.start_date)
+      } else{
+        console.log('tournament not in our db', element.name, element.start_date)
+      }
+    }
+ 
+  });
+  
+  // createTournamentEntry(data[3].name, data[3].start_date)
+}
+
+const deleteTournament = async (req, res) => {
+  const {id} = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({err: 'Tournament not found'});
+  }
+
+  const tournament = await Tournament.findOneAndDelete({_id: id});
+
+  if (!tournament) {
+    return res.status(404).json({err: 'Tournament not found'});
+  }
+
+  res.status(200).json(tournament);
+}
+
 
 
 module.exports = {
     getTournament,
+    getAllTournaments,
+    getAllTournamentEntries,
+    deleteTournament,
 };

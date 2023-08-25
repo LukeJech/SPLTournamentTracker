@@ -8,6 +8,10 @@ const PlayerSchema = new Schema({
         required: true,
     },
     points: {
+        noviceModern: {
+            type: Number,
+            default:0,
+        },
         bronzeModern: {
             type: Number,
             default:0,

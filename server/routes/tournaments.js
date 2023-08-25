@@ -12,8 +12,10 @@ const router = express.Router();
 // GET all tournaments from our db
 router.get('/all', getAllTournamentEntries);
 
+
+
 // reset tournament data
-router.get('/all/delete', deleteAllTournaments);
+router.delete('/all/delete', deleteAllTournaments);
 
 // Get 1 tournament data
 router.get('/:id', getTournament);

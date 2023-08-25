@@ -65,6 +65,16 @@ const deletePlayer = async (req, res) => {
     res.status(200).json(player);
 }
 
+// delete all players
+const deleteAllPlayers = async (req, res) => {
+    try {
+        const players = await Player.deleteMany({});
+        res.status(200).json(players);
+    } catch {
+        throw new Error(err.message)
+    }
+}
+
 // update a player
 const updatePlayer = async (name, points, placements) => {
     try{
@@ -73,6 +83,7 @@ const updatePlayer = async (name, points, placements) => {
             { name },
             {
                 $inc: {
+                    'points.noviceModern': points.noviceModern,
                     'points.bronzeModern': points.bronzeModern,
                     'points.bronzeWild': points.bronzeWild,
                     'points.silverModern': points.silverModern,
@@ -102,5 +113,6 @@ module.exports = {
     getPlayerByName,
     getPlayer,
     deletePlayer,
-    updatePlayer
+    updatePlayer,
+    deleteAllPlayers
 }
